@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: CustomerService
+  datasource:
+    url: jdbc:postgresql://localhost:5432/doc_db
+    username: doc_user
+    password: doc_pswd_01
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      show-sql: true
+  liquibase:
+    change-log: db/changelog/db.changelog-master.yaml
+  properties:
+    hibernate:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+  server:
+    port: 8080

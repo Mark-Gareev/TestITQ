@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  util-service:
+    image: util-service
+    build:
+      context: ./UtilService
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+    depends_on:
+      - document-service
+  document-service:
+    image: doc_service
+    build:
+      context: ./DocumentService
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - document-service-db
+
+  document-service-db:
+    image: postgres:14.7-alpine
+    container_name: doc-base
+    environment:
+      # for demo app. No creds should be here
+      POSTGRES_USER: doc_user
+      POSTGRES_PASSWORD: doc_pswd_01
+    ports:
+      - "15432:5432"
+    volumes:
+      - .infrastructure/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+volumes:
+  db-data:

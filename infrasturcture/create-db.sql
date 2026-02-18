@@ -1,0 +1,1 @@
+create database doc_db;
