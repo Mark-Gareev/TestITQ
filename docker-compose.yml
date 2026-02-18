@@ -29,7 +29,7 @@ services:
     ports:
       - "15432:5432"
     volumes:
-      - .infrastructure/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
+      - ./infrastructure/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
 volumes:

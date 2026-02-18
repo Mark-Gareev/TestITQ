@@ -43,7 +43,7 @@ public class DocumentServiceImpl implements DocumentService {
      * There is no retry logic, because in our demo app no operations performed except status changing.
      * So, if we have optimistic lock ex, it means smb already change status here and we can do nothing.
      */
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Transactional(Transactional.TxType.REQUIRED)
     @Override
     public Document changeDocumentStatus(String author, Long id, DocumentStatus targetStatus) {
         Document document = repository.findDocumentById(id);

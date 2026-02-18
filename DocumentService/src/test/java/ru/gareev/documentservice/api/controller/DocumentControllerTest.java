@@ -1,5 +1,6 @@
 package ru.gareev.documentservice.api.controller;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import ru.gareev.documentservice.api.dto.*;
 import ru.gareev.documentservice.entity.ActionType;
+import ru.gareev.documentservice.entity.ActivityFeedItem;
 import ru.gareev.documentservice.entity.DocumentStatus;
 import ru.gareev.documentservice.util.TestUtil;
 
@@ -22,6 +24,9 @@ import java.util.List;
 class DocumentControllerTest {
     @Autowired
     private DocumentController controller;
+
+    @Autowired
+    EntityManager manager;
 
     @Test
     public void fromCreateToApproveDocumentTest() {
@@ -145,6 +150,8 @@ class DocumentControllerTest {
         controller.submitDocuments(
                 TestUtil.getStatusChangeRequest("s", dto.getId())
         );
+        manager.flush();
+        manager.clear();
         FullDocumentDto full = controller.getFullDocumentById(dto.getId());
         //assert activities
         Assertions.assertFalse(full.getActivity().isEmpty());
