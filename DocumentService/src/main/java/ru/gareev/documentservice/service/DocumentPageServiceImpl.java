@@ -38,7 +38,7 @@ public class DocumentPageServiceImpl implements DocumentPageService {
                 DocumentSpecifications.statusEquals(DocumentStatus.forString(status))
         );
         Sort sorting = Sort.unsorted();
-        if (!sortBy.isEmpty()) {
+        if (sortBy != null && !sortBy.isEmpty()) {
             for (String sortParam : sortBy) {
                 String[] parts = sortParam.split(",");
                 String field = parts[0];

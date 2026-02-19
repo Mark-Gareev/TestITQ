@@ -10,6 +10,9 @@ import ru.gareev.documentservice.service.DocumentPageService;
 import ru.gareev.documentservice.service.DocumentService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -42,7 +45,7 @@ public class DocumentController {
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam List<String> sortBy
+            @RequestParam(required = false) List<String> sortBy
     ) {
         return documentPageService.getPage(
                 createdBy,

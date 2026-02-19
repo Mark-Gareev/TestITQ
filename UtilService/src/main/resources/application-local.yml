@@ -1,2 +1,14 @@
 documents:
   base-url: http://localhost:8080
+logging:
+  level:
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS.Z} [%thread] %-5level %logger{36} [%X{TASK}] - %msg%n"
+background-task:
+  submit:
+    repeat-millis: 10000
+    batch-size: 10
+  approve:
+    repeat-millis: 10000
+    batch-size: 10
