@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.gareev.utilservice.api.dto.DocumentCreateRequest;
 import ru.gareev.utilservice.aspect.CreatingTask;
+import ru.gareev.utilservice.service.client.DocumentConnectionProvider;
 
 @Service
 @RequiredArgsConstructor

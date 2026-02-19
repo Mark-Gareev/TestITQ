@@ -3,7 +3,7 @@ package ru.gareev.documentservice.api.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.gareev.documentservice.api.dto.ApprovalRegistryItemDto;
+import ru.gareev.documentservice.api.dto.response.ApprovalRegistryItemDto;
 
 import java.util.Collections;
 import java.util.List;

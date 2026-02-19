@@ -1,7 +1,7 @@
 package ru.gareev.documentservice.util;
 
-import ru.gareev.documentservice.api.dto.DocumentCreationRequest;
-import ru.gareev.documentservice.api.dto.StatusChangeRequest;
+import ru.gareev.documentservice.api.dto.request.DocumentCreationRequest;
+import ru.gareev.documentservice.api.dto.request.StatusChangeRequest;
 
 import java.util.Arrays;
 import java.util.List;

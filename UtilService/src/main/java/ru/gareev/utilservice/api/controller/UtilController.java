@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gareev.utilservice.api.dto.ConcurrentAccessResponse;
-import ru.gareev.utilservice.service.ConcurrentApproveExecutor;
 import ru.gareev.utilservice.service.DocumentService;
+import ru.gareev.utilservice.service.concurrent.ConcurrentApproveExecutor;
 
 @RestController
 @RequestMapping("/api/util")

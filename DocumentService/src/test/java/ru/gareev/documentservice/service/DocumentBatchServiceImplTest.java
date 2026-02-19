@@ -9,10 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.datasource.lookup.DataSourceLookupFailureException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import ru.gareev.documentservice.api.dto.DocumentDto;
-import ru.gareev.documentservice.api.dto.StatusMovingResultItem;
+import ru.gareev.documentservice.api.dto.response.DocumentDto;
+import ru.gareev.documentservice.api.dto.response.StatusMovingResultItem;
 import ru.gareev.documentservice.entity.DocumentStatus;
 import ru.gareev.documentservice.repository.DocumentRepository;
+import ru.gareev.documentservice.service.approval_registry.ApprovalRegistryService;
+import ru.gareev.documentservice.service.document.DocumentService;
+import ru.gareev.documentservice.service.document_batch.DocumentBatchService;
 import ru.gareev.documentservice.util.TestUtil;
 
 import java.util.ArrayList;

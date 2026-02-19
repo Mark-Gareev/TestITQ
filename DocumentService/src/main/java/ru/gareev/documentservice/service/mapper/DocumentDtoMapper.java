@@ -1,10 +1,10 @@
 package ru.gareev.documentservice.service.mapper;
 
 import org.springframework.stereotype.Service;
-import ru.gareev.documentservice.api.dto.ActivityFeedItemDto;
-import ru.gareev.documentservice.api.dto.DocumentDto;
-import ru.gareev.documentservice.api.dto.DocumentListItemDto;
-import ru.gareev.documentservice.api.dto.FullDocumentDto;
+import ru.gareev.documentservice.api.dto.response.ActivityFeedItemDto;
+import ru.gareev.documentservice.api.dto.response.DocumentDto;
+import ru.gareev.documentservice.api.dto.response.DocumentListItemDto;
+import ru.gareev.documentservice.api.dto.response.FullDocumentDto;
 import ru.gareev.documentservice.entity.ActivityFeedItem;
 import ru.gareev.documentservice.entity.Document;
 

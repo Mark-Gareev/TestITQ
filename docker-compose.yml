@@ -32,6 +32,8 @@ services:
       - ./infrastructure/create-db.sql:/docker-entrypoint-initdb.d/create-db.sql
       - db-data:/var/lib/postgresql/data
     restart: unless-stopped
+    depends_on:
+      - loki
   loki:
     image: grafana/loki:3.4.2
     ports:

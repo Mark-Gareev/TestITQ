@@ -1,6 +1,6 @@
 spring:
   application:
-    name: CustomerService
+    name: DocumentService
   datasource:
     url: jdbc:postgresql://localhost:5432/doc_db
     username: doc_user
@@ -9,7 +9,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-      show-sql: true
   liquibase:
     change-log: db/changelog/db.changelog-master.yaml
   properties:
