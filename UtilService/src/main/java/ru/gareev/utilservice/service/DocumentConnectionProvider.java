@@ -12,6 +12,8 @@ import ru.gareev.utilservice.api.dto.DocumentCreateRequest;
 import ru.gareev.utilservice.api.dto.PageResponse;
 import ru.gareev.utilservice.api.dto.StatusChangeRequest;
 import ru.gareev.utilservice.api.dto.StatusChangeResponseItem;
+import ru.gareev.utilservice.entity.Document;
+import ru.gareev.utilservice.entity.OperationStatus;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -108,4 +110,20 @@ public class DocumentConnectionProvider {
         return paramMap;
     }
 
+    public Document getDocument(Long docId) {
+        return client.get()
+                .uri("/api/documents/{}", docId)
+                .retrieve()
+                .body(Document.class);
+    }
+
+    public OperationStatus statusApprove(Long id) {
+        StatusChangeRequest request = getChangeRequest(Collections.singletonList(id));
+        StatusChangeResponseItem response = client.put()
+                .uri("api/documents/approve")
+                .body(request)
+                .retrieve()
+                .body(StatusChangeResponseItem.class);
+        return OperationStatus.forString(response.getResult());
+    }
 }

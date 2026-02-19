@@ -1,13 +1,13 @@
 package ru.gareev.utilservice.api.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gareev.utilservice.api.dto.ConcurrentAccessResponse;
+import ru.gareev.utilservice.service.ConcurrentApproveExecutor;
 import ru.gareev.utilservice.service.DocumentService;
 
 @RestController
@@ -15,31 +15,19 @@ import ru.gareev.utilservice.service.DocumentService;
 @RequiredArgsConstructor
 public class UtilController {
 
-    DocumentService service;
-
-    @Autowired
-    public UtilController(DocumentService service){
-        this.service = service;
-    }
+    private final DocumentService service;
+    private final ConcurrentApproveExecutor approveExecutor;
 
     @GetMapping("/concurrentApprove")
-    public ResponseEntity<ConcurrentAccessResponse> getConcurrent(
+    public ConcurrentAccessResponse getConcurrent(
             @RequestParam Long documentId,
-            @RequestParam Long threads,
-            @RequestParam Long attempts
+            @RequestParam int threads,
+            @RequestParam int attempts
     ) {
         //TODO add logic
-        return ResponseEntity.ok(ConcurrentAccessResponse.builder().build());
+        return approveExecutor.executeEveryThread(threads,attempts,documentId);
     }
 
-    @GetMapping("/ping")
-    public ResponseEntity<?> pingDocuments() {
-        if (service.ping()) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
     @GetMapping("/create")
     public ResponseEntity<Void> createDocuments(@RequestParam Long documentsCount){
         service.createDocuments(documentsCount);
