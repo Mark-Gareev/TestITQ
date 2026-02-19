@@ -14,11 +14,6 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentConnectionProvider provider;
 
     @Override
-    public boolean ping() {
-        return provider.ping();
-    }
-
-    @Override
     @CreatingTask
     public void createDocuments(Long documentsCount) {
         DocumentCreateRequest request = DocumentCreateRequest.builder()

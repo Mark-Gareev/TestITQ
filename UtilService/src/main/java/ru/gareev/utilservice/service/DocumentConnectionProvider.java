@@ -14,6 +14,7 @@ import ru.gareev.utilservice.api.dto.StatusChangeRequest;
 import ru.gareev.utilservice.api.dto.StatusChangeResponseItem;
 import ru.gareev.utilservice.entity.Document;
 import ru.gareev.utilservice.entity.OperationStatus;
+import ru.gareev.utilservice.exceptions.LocalNetworkException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,14 +28,6 @@ public class DocumentConnectionProvider {
 
     public DocumentConnectionProvider(@Value("${documents.base-url}") String baseUrl) {
         this.client = RestClient.create(baseUrl);
-    }
-
-    public boolean ping() {
-        ResponseEntity<String> entity = client.get()
-                .uri("/api/documents/{id}", 1)
-                .retrieve()
-                .toEntity(String.class);
-        return entity.getStatusCode().is2xxSuccessful();
     }
 
     public ResponseEntity<Void> create(DocumentCreateRequest request) {
@@ -97,8 +90,7 @@ public class DocumentConnectionProvider {
                     .map(PageResponse.DocumentId::getId)
                     .toList();
         } else {
-            log.error("result of searching is empty");
-            return Collections.emptyList();
+            throw new LocalNetworkException("result of searching is null");
         }
     }
 
@@ -124,6 +116,10 @@ public class DocumentConnectionProvider {
                 .body(request)
                 .retrieve()
                 .body(StatusChangeResponseItem.class);
-        return OperationStatus.forString(response.getResult());
+        if (response != null) {
+            return OperationStatus.forString(response.getResult());
+        } else {
+            throw new LocalNetworkException("approve request to document service returns null");
+        }
     }
 }
