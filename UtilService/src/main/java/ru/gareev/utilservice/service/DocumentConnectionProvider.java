@@ -1,8 +1,10 @@
 package ru.gareev.utilservice.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,8 +36,12 @@ public class DocumentConnectionProvider {
         return client.post()
                 .uri("api/documents/create")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("X-Correlation-Id", MDC.get("correlationId"))
                 .body(request)
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, resp) -> {
+                    throw new LocalNetworkException(resp.getStatusText());
+                })
                 .toEntity(Void.class);
     }
 
@@ -51,6 +57,7 @@ public class DocumentConnectionProvider {
         StatusChangeRequest request = getChangeRequest(submitted);
         return client.put()
                 .uri("api/documents/approve")
+                .header("X-Correlation-Id", MDC.get("correlationId"))
                 .body(request)
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {
@@ -63,6 +70,7 @@ public class DocumentConnectionProvider {
         return client.put()
                 .uri("api/documents/submit")
                 .body(request)
+                .header("X-Correlation-Id", MDC.get("correlationId"))
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {
                 });
@@ -83,6 +91,7 @@ public class DocumentConnectionProvider {
                             .forEach(builder::queryParam);
                     return builder.build();
                 })
+                .header("X-Correlation-Id", MDC.get("correlationId"))
                 .retrieve()
                 .body(PageResponse.class);
         if (response != null) {
@@ -105,6 +114,7 @@ public class DocumentConnectionProvider {
     public Document getDocument(Long docId) {
         return client.get()
                 .uri("/api/documents/{}", docId)
+                .header("X-Correlation-Id", MDC.get("correlationId"))
                 .retrieve()
                 .body(Document.class);
     }
@@ -113,6 +123,7 @@ public class DocumentConnectionProvider {
         StatusChangeRequest request = getChangeRequest(Collections.singletonList(id));
         StatusChangeResponseItem response = client.put()
                 .uri("api/documents/approve")
+                .header("X-Correlation-Id", MDC.get("correlationId"))
                 .body(request)
                 .retrieve()
                 .body(StatusChangeResponseItem.class);
