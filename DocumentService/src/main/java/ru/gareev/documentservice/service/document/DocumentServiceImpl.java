@@ -41,7 +41,7 @@ public class DocumentServiceImpl implements DocumentService {
         document.setCreationDateTime(LocalDateTime.now());
         document.setUpdateDateTime(LocalDateTime.now());
         document = repository.save(document);
-        log.info("document successfully created");
+        log.info("document with id {} successfully created",document.getId());
         return documentDtoMapper.toDto(document);
     }
 

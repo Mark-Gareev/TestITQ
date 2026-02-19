@@ -44,11 +44,9 @@ public class ConcurrentApproveExecutor {
                 try {
                     total = total.merge(future.get());
                 } catch (InterruptedException e) {
-                    log.error("Future.get was interrupted ");
-                    log.error(e.getMessage());
+                    log.error("Future.get was interrupted ",e);
                 } catch (ExecutionException e) {
-                    log.error("Future.get has ExecException");
-                    log.error(e.getMessage());
+                    log.error("Future.get has ExecException",e);
                 }
             }
         } else {

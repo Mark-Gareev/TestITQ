@@ -22,9 +22,9 @@ public class ConcurrentResult {
 
     public ConcurrentResult merge(ConcurrentResult adding) {
         return new ConcurrentResult(
-                adding.getSuccess(),
-                adding.getFailure(),
-                adding.getNotFound()
+                this.success + adding.getSuccess(),
+                this.failure + adding.getFailure(),
+                this.notFound + adding.getNotFound()
         );
     }
 }

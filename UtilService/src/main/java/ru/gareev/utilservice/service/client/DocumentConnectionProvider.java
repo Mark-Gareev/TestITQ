@@ -79,7 +79,7 @@ public class DocumentConnectionProvider {
 
     public Document getDocument(Long docId) {
         return client.get()
-                .uri("/api/documents/{}", docId)
+                .uri("/api/documents/" + docId)
                 .header(Constants.corIdHeader, MDC.get(Constants.corIdKey))
                 .retrieve()
                 .body(Document.class);
@@ -87,14 +87,18 @@ public class DocumentConnectionProvider {
 
     public OperationStatus statusApprove(Long id, String author) {
         StatusChangeRequest request = getChangeRequest(Collections.singletonList(id), author);
-        StatusChangeResponseItem response = client.put()
+        List<StatusChangeResponseItem> response = client.put()
                 .uri("api/documents/approve")
                 .header(Constants.corIdHeader, MDC.get(Constants.corIdKey))
                 .body(request)
                 .retrieve()
-                .body(StatusChangeResponseItem.class);
-        if (response != null) {
-            return OperationStatus.forString(response.getResult());
+                .onStatus(HttpStatusCode::isError, (req, resp) -> {
+                    throw new LocalNetworkException(resp.getStatusCode() + " " + resp.getStatusText());
+                })
+                .body(new ParameterizedTypeReference<>() {
+                });
+        if (response != null && !response.isEmpty()) {
+            return OperationStatus.forString(response.get(0).getResult());
         } else {
             throw new LocalNetworkException("approve request to document service returns null");
         }
