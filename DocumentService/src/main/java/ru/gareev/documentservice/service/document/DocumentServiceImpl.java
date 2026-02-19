@@ -1,10 +1,10 @@
 package ru.gareev.documentservice.service.document;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import ru.gareev.documentservice.api.dto.request.DocumentCreationRequest;
 import ru.gareev.documentservice.api.dto.response.DocumentDto;
@@ -41,7 +41,7 @@ public class DocumentServiceImpl implements DocumentService {
         document.setCreationDateTime(LocalDateTime.now());
         document.setUpdateDateTime(LocalDateTime.now());
         document = repository.save(document);
-        log.info("document with id {} successfully created",document.getId());
+        log.info("document with id {} successfully created", document.getId());
         return documentDtoMapper.toDto(document);
     }
 
@@ -78,13 +78,15 @@ public class DocumentServiceImpl implements DocumentService {
                 }
 
             }
-        } catch (OptimisticLockException e) {
+        } catch (OptimisticLockingFailureException e) {
             // swap exceptions to add correct results in documentBatchService
+            // no e logging in info. this may be retry logic,
+            // but for now its only shows that we have this ex
             log.info("optimistic lock ex for document with id {}", id);
             throw new UnsupportedStatusMove();
         }
         activityFeedService.createActivityItem(document, document.getStatus(), author);
-        log.info("activity item saved for document with id {}",id);
+        log.info("activity item saved for document with id {}", id);
 
         return document;
     }
