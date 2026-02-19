@@ -17,6 +17,7 @@ import java.util.concurrent.*;
 @Service
 public class ConcurrentApproveExecutor {
     private final DocumentConnectionProvider connectionProvider;
+    private static final String AUTHOR = "concurrentApprove";
 
     public ConcurrentAccessResponse executeEveryThread(int threads, int attempts, Long docId) {
 
@@ -68,7 +69,7 @@ public class ConcurrentApproveExecutor {
         int failure = 0;
         int notFound = 0;
         for (int i = 0; i < attempts; i++) {
-            OperationStatus status = connectionProvider.statusApprove(id);
+            OperationStatus status = connectionProvider.statusApprove(id, AUTHOR);
             switch (status) {
                 case SUCCESS -> success++;
                 case FAILURE -> failure++;

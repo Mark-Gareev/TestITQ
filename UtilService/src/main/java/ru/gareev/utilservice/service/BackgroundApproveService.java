@@ -15,11 +15,13 @@ import java.util.List;
 public class BackgroundApproveService {
     private final DocumentConnectionProvider connectionProvider;
     private final BackgroundTaskConfig config;
+    private static final String AUTHOR = "backgroundApprove";
+
     @BackgroundApprove
     public void approve() {
         List<Long> submitted = connectionProvider.getSubmit(config.getApproveBatchSize());
         if (submitted.size() == config.getApproveBatchSize()) {
-            List<StatusChangeResponseItem> resp = connectionProvider.approve(submitted);
+            List<StatusChangeResponseItem> resp = connectionProvider.approve(submitted, AUTHOR);
             for (StatusChangeResponseItem item : resp) {
                 log.info("for approve document with id {} has operation state {}",
                         item.getId(),

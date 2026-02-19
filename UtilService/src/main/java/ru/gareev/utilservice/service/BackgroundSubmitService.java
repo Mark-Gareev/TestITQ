@@ -15,11 +15,12 @@ import java.util.List;
 public class BackgroundSubmitService {
     private final BackgroundTaskConfig config;
     private final DocumentConnectionProvider connectionProvider;
+    private static final String AUTHOR = "backgroundSubmit";
     @BackgroundSubmit
     public void submit() {
         List<Long> drafts = connectionProvider.getDraft(config.getSubmitBatchSize());
         if (drafts.size() == config.getSubmitBatchSize()) {
-            List<StatusChangeResponseItem> resp = connectionProvider.submit(drafts);
+            List<StatusChangeResponseItem> resp = connectionProvider.submit(drafts,AUTHOR);
             for (StatusChangeResponseItem item : resp) {
                 log.info("for submit document with id {} has operation state {}",
                         item.getId(),

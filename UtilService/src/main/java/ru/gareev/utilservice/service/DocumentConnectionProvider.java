@@ -53,8 +53,8 @@ public class DocumentConnectionProvider {
         return searchByStatus(draftCount, "DRAFT");
     }
 
-    public List<StatusChangeResponseItem> approve(List<Long> submitted) {
-        StatusChangeRequest request = getChangeRequest(submitted);
+    public List<StatusChangeResponseItem> approve(List<Long> submitted, String author) {
+        StatusChangeRequest request = getChangeRequest(submitted, author);
         return client.put()
                 .uri("api/documents/approve")
                 .header("X-Correlation-Id", MDC.get("correlationId"))
@@ -65,8 +65,8 @@ public class DocumentConnectionProvider {
 
     }
 
-    public List<StatusChangeResponseItem> submit(List<Long> drafts) {
-        StatusChangeRequest request = getChangeRequest(drafts);
+    public List<StatusChangeResponseItem> submit(List<Long> drafts, String author) {
+        StatusChangeRequest request = getChangeRequest(drafts, author);
         return client.put()
                 .uri("api/documents/submit")
                 .body(request)
@@ -76,10 +76,33 @@ public class DocumentConnectionProvider {
                 });
     }
 
-    private StatusChangeRequest getChangeRequest(List<Long> ids) {
+    public Document getDocument(Long docId) {
+        return client.get()
+                .uri("/api/documents/{}", docId)
+                .header("X-Correlation-Id", MDC.get("correlationId"))
+                .retrieve()
+                .body(Document.class);
+    }
+
+    public OperationStatus statusApprove(Long id, String author) {
+        StatusChangeRequest request = getChangeRequest(Collections.singletonList(id), author);
+        StatusChangeResponseItem response = client.put()
+                .uri("api/documents/approve")
+                .header("X-Correlation-Id", MDC.get("correlationId"))
+                .body(request)
+                .retrieve()
+                .body(StatusChangeResponseItem.class);
+        if (response != null) {
+            return OperationStatus.forString(response.getResult());
+        } else {
+            throw new LocalNetworkException("approve request to document service returns null");
+        }
+    }
+
+    private StatusChangeRequest getChangeRequest(List<Long> ids, String author) {
         return StatusChangeRequest.builder()
                 .ids(ids)
-                .author(this.getClass().getName())
+                .author(author == null ? this.getClass().getName() : author)
                 .build();
     }
 
@@ -109,28 +132,5 @@ public class DocumentConnectionProvider {
         paramMap.put("page", "0");
         paramMap.put("size", String.valueOf(submitCount));
         return paramMap;
-    }
-
-    public Document getDocument(Long docId) {
-        return client.get()
-                .uri("/api/documents/{}", docId)
-                .header("X-Correlation-Id", MDC.get("correlationId"))
-                .retrieve()
-                .body(Document.class);
-    }
-
-    public OperationStatus statusApprove(Long id) {
-        StatusChangeRequest request = getChangeRequest(Collections.singletonList(id));
-        StatusChangeResponseItem response = client.put()
-                .uri("api/documents/approve")
-                .header("X-Correlation-Id", MDC.get("correlationId"))
-                .body(request)
-                .retrieve()
-                .body(StatusChangeResponseItem.class);
-        if (response != null) {
-            return OperationStatus.forString(response.getResult());
-        } else {
-            throw new LocalNetworkException("approve request to document service returns null");
-        }
     }
 }
