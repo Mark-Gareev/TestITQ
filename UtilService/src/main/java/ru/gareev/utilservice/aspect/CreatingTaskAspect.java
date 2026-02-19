@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class CreatingTaskAspect {
     @Around("@annotation(CreatingTask)")
     public Object addLogTag(ProceedingJoinPoint joinPoint) throws Throwable {
-        MDC.put("TASK", "CREATE");
+        MDC.put("TASK", "CREATE_DOCUMENTS");
         try {
             return joinPoint.proceed();
         } finally {
