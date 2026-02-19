@@ -1,6 +1,7 @@
 package ru.gareev.documentservice.api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +12,6 @@ import java.util.List;
 public class StatusChangeRequest {
     @NotBlank
     private String author;
-    @NotBlank
+    @Size(min = 1)
     private List<Long> ids;
 }

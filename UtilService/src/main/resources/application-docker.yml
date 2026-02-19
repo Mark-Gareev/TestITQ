@@ -5,7 +5,7 @@ logging:
   level:
     root: INFO
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS.Z} [%thread] %-5level %logger{36} [%X{TASK}] - [%X{correlationId}] %msg%n"
+    console: [%thread] %-5level %logger{36} [%X{TASK}] - [%X{correlationId}] %msg%n"
 background-task:
   submit:
     repeat-millis: 10000

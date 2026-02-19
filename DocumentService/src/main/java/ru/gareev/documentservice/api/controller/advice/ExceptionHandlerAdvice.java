@@ -29,7 +29,7 @@ public class ExceptionHandlerAdvice {
         ProblemDetail res = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         log.error("Bad request ", mnv);
         String detail = HttpStatus.NOT_FOUND.value() +
-                "error id : " +
+                " error id : " +
                 MDC.get("correlationId");
         res.setDetail(detail);
         return res;
@@ -40,7 +40,7 @@ public class ExceptionHandlerAdvice {
         ProblemDetail res = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         log.error("Bad request ", e);
         String detail = HttpStatus.INTERNAL_SERVER_ERROR.value() +
-                "error id : " +
+                " error id : " +
                 MDC.get("correlationId");
         res.setDetail(detail);
         return res;
