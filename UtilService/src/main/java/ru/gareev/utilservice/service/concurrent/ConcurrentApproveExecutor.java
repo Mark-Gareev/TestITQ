@@ -2,12 +2,14 @@ package ru.gareev.utilservice.service.concurrent;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import ru.gareev.utilservice.api.dto.ConcurrentAccessResponse;
 import ru.gareev.utilservice.entity.ConcurrentResult;
 import ru.gareev.utilservice.entity.Document;
 import ru.gareev.utilservice.entity.OperationStatus;
 import ru.gareev.utilservice.service.client.DocumentConnectionProvider;
+import ru.gareev.utilservice.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +23,13 @@ public class ConcurrentApproveExecutor {
     private static final String AUTHOR = "concurrentApprove";
 
     public ConcurrentAccessResponse executeEveryThread(int threads, int attempts, Long docId) {
-
+        long start = System.currentTimeMillis();
         ExecutorService executor = Executors.newFixedThreadPool(threads);
         List<Callable<ConcurrentResult>> tasks = new ArrayList<>();
-
+        //we have threadlocal MDC, so we put it into every thread to continue tracking
+        String corId = MDC.get(Constants.corIdKey);
         for (int i = 0; i < threads; i++) {
-            tasks.add(() -> executeInThread(attempts, docId));
+            tasks.add(() -> executeInThread(attempts, docId, corId));
         }
 
         List<Future<ConcurrentResult>> futures = null;
@@ -44,9 +47,9 @@ public class ConcurrentApproveExecutor {
                 try {
                     total = total.merge(future.get());
                 } catch (InterruptedException e) {
-                    log.error("Future.get was interrupted ",e);
+                    log.error("Future.get was interrupted ", e);
                 } catch (ExecutionException e) {
-                    log.error("Future.get has ExecException",e);
+                    log.error("Future.get has ExecException", e);
                 }
             }
         } else {
@@ -54,6 +57,8 @@ public class ConcurrentApproveExecutor {
         }
         executor.shutdown();
         Document document = connectionProvider.getDocument(docId);
+        long end = System.currentTimeMillis();
+        log.info("concurrent approve proceed for {}ms",end-start);
         return ConcurrentAccessResponse
                 .builder()
                 .successfulAttemptCount(total.getSuccess())
@@ -63,18 +68,23 @@ public class ConcurrentApproveExecutor {
                 .build();
     }
 
-    private ConcurrentResult executeInThread(int attempts, Long id) {
-        int success = 0;
-        int failure = 0;
-        int notFound = 0;
-        for (int i = 0; i < attempts; i++) {
-            OperationStatus status = connectionProvider.statusApprove(id, AUTHOR);
-            switch (status) {
-                case SUCCESS -> success++;
-                case FAILURE -> failure++;
-                case NOT_FOUND -> notFound++;
+    private ConcurrentResult executeInThread(int attempts, Long id, String corId) {
+        try {
+            MDC.put(Constants.corIdKey, corId);
+            int success = 0;
+            int failure = 0;
+            int notFound = 0;
+            for (int i = 0; i < attempts; i++) {
+                OperationStatus status = connectionProvider.statusApprove(id, AUTHOR);
+                switch (status) {
+                    case SUCCESS -> success++;
+                    case FAILURE -> failure++;
+                    case NOT_FOUND -> notFound++;
+                }
             }
+            return new ConcurrentResult(success, failure, notFound);
+        } finally {
+            MDC.remove(Constants.corIdKey);
         }
-        return new ConcurrentResult(success, failure, notFound);
     }
 }
