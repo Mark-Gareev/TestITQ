@@ -22,12 +22,10 @@ public class ActivityFeedServiceImpl implements ActivityFeedService {
         item.setActivityDateTime(LocalDateTime.now());
         item.setDocument(document);
         switch (status) {
-            case SUBMITTED -> {
-                item.setActionType(ActionType.SUBMIT);
-            }
-            case APPROVED -> {
-                item.setActionType(ActionType.APPROVE);
-            }
+            case SUBMITTED -> item.setActionType(ActionType.SUBMIT);
+
+            case APPROVED -> item.setActionType(ActionType.APPROVE);
+
             default -> throw new UnsupportedOperationException("cannot create activity feed in draft or null state");
         }
         repository.save(item);

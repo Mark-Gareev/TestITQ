@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.ActiveProfiles;
 import ru.gareev.documentservice.api.dto.*;
 import ru.gareev.documentservice.entity.ActionType;
-import ru.gareev.documentservice.entity.ActivityFeedItem;
 import ru.gareev.documentservice.entity.DocumentStatus;
 import ru.gareev.documentservice.util.TestUtil;
 

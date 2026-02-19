@@ -1,7 +1,6 @@
 package ru.gareev.documentservice.api.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.MDC;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import ru.gareev.documentservice.api.dto.*;
@@ -10,9 +9,6 @@ import ru.gareev.documentservice.service.DocumentPageService;
 import ru.gareev.documentservice.service.DocumentService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @RequiredArgsConstructor

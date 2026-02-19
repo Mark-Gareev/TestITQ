@@ -5,13 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
-import ru.gareev.utilservice.api.dto.StatusChangeResponseItem;
-import ru.gareev.utilservice.aspect.BackgroundApprove;
-import ru.gareev.utilservice.aspect.BackgroundSubmit;
 import ru.gareev.utilservice.config.BackgroundTaskConfig;
 
 import java.time.Duration;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
