@@ -2,6 +2,7 @@ package ru.gareev.documentservice.service.document_batch;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import ru.gareev.documentservice.api.dto.request.StatusChangeRequest;
 import ru.gareev.documentservice.api.dto.response.StatusMovingResultItem;
@@ -51,6 +52,13 @@ public class DocumentBatchServiceImpl implements DocumentBatchService {
                         .build()
                 );
             } catch (UnsupportedStatusMove us) {
+                res.add(StatusMovingResultItem.builder()
+                        .result("конфликт")
+                        .id(id)
+                        .build()
+                );
+            } catch (OptimisticLockingFailureException e){
+                log.info("optimistic failure, rollback transaction for id {}",id);
                 res.add(StatusMovingResultItem.builder()
                         .result("конфликт")
                         .id(id)

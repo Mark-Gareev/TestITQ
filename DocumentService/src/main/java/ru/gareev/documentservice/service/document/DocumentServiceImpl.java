@@ -4,7 +4,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import ru.gareev.documentservice.api.dto.request.DocumentCreationRequest;
 import ru.gareev.documentservice.api.dto.response.DocumentDto;
@@ -62,29 +61,21 @@ public class DocumentServiceImpl implements DocumentService {
             log.info("wrong status moving for document with id {}", id);
             throw new UnsupportedStatusMove();
         }
-        try {
-            document.setStatus(targetStatus);
-            document.setUpdateDateTime(LocalDateTime.now());
-            document = repository.save(document);
-            log.info("status successfully changed to {} for document with id {}", targetStatus, id);
-            if (targetStatus == DocumentStatus.APPROVED) {
-                try {
-                    registryService.createApproved(author, document.getId());
-                    log.info("approval registry item successfully created for document with id {}", id);
-                } catch (Exception e) {
-                    //should be other exception to other answer, but in demo app it is no difference
-                    //between registry fail and incorrect status move
-                    log.info("error while creating registry item for document with id {}", id);
-                    throw new UnsupportedStatusMove();
-                }
-
+        document.setStatus(targetStatus);
+        document.setUpdateDateTime(LocalDateTime.now());
+        document = repository.save(document);
+        log.info("status successfully changed to {} for document with id {}", targetStatus, id);
+        if (targetStatus == DocumentStatus.APPROVED) {
+            try {
+                registryService.createApproved(author, document.getId());
+                log.info("approval registry item successfully created for document with id {}", id);
+            } catch (Exception e) {
+                //should be other exception to other answer, but in demo app it is no difference
+                //between registry fail and incorrect status move
+                log.info("error while creating registry item for document with id {}", id);
+                throw new UnsupportedStatusMove();
             }
-        } catch (OptimisticLockingFailureException e) {
-            // swap exceptions to add correct results in documentBatchService
-            // no e logging in info. this may be retry logic,
-            // but for now its only shows that we have this ex
-            log.info("optimistic lock ex for document with id {}", id);
-            throw new UnsupportedStatusMove();
+
         }
         activityFeedService.createActivityItem(document, document.getStatus(), author);
         log.info("activity item saved for document with id {}", id);
