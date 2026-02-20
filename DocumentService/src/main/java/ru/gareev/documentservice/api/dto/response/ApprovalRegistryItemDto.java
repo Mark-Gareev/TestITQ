@@ -6,4 +6,6 @@ import lombok.Data;
 @Data
 @Builder
 public class ApprovalRegistryItemDto {
+    private String author;
+    private Long documentId;
 }
