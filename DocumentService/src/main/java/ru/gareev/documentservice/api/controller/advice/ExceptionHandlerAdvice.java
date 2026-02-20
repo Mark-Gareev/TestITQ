@@ -38,7 +38,7 @@ public class ExceptionHandlerAdvice {
     @ExceptionHandler({Exception.class})
     public ProblemDetail handleEveryEx(Exception e) {
         ProblemDetail res = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-        log.error("Bad request ", e);
+        log.error("Internal server error ", e);
         String detail = HttpStatus.INTERNAL_SERVER_ERROR.value() +
                 " error id : " +
                 MDC.get("correlationId");
