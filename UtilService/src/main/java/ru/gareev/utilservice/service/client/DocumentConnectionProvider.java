@@ -7,7 +7,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
@@ -21,7 +20,6 @@ import ru.gareev.utilservice.entity.OperationStatus;
 import ru.gareev.utilservice.exceptions.LocalNetworkException;
 import ru.gareev.utilservice.util.Constants;
 
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -98,10 +96,6 @@ public class DocumentConnectionProvider {
         } catch (NoSuchElementException e) {
             return null;
         }
-    }
-
-    private boolean is404Err(ClientHttpResponse clientHttpResponse) throws IOException {
-        return clientHttpResponse.getStatusCode().value() == 404;
     }
 
     @DocumentServiceConnection

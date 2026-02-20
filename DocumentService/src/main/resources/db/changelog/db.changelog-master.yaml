@@ -99,3 +99,13 @@ databaseChangeLog:
               - column:
                   name: version
                   type: BIGINT
+  - changeSet:
+      id: 3
+      author: mark
+      changes:
+        - createIndex:
+            tableName: document
+            indexName: idx_documents_status
+            columns:
+              - column:
+                  name: status
