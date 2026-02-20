@@ -20,18 +20,21 @@ public class DocumentServiceImpl implements DocumentService {
         DocumentCreateRequest request = DocumentCreateRequest.builder()
                 .author("utilService")
                 .build();
-        log.info("start creating {} documents",documentsCount);
+        long start = System.currentTimeMillis();
+        log.info("start creating {} documents", documentsCount);
         long createdCount = 0L;
         for (long l = 0; l < documentsCount; l++) {
             request.setName("cycle creating " + l);
             ResponseEntity<Void> response = provider.create(request);
             if (!response.getStatusCode().is2xxSuccessful()) {
                 log.info("get error while creating document http code {}", response.getStatusCode().value());
-            }else{
+            } else {
                 log.info("successfully create document");
                 createdCount++;
             }
-            log.info("created {} documents",createdCount);
+            log.info("created {} documents", createdCount);
         }
+        long end = System.currentTimeMillis();
+        log.info("creating {} documents proceed for {}mc", createdCount, end - start);
     }
 }
