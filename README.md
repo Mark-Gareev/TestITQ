@@ -29,7 +29,7 @@ http://localhost:8080/swagger-ui/index.html -- апи document service
 
 http://localhost:9090/swagger-ui/index.html -- апи util service
 
-http://localhost:3000 -- Grafarna(admin admin), в ней логи сервисов(ссылка на буквы про логи).
+http://localhost:3000 -- Grafarna(admin admin), в ней логи сервисов([Описание логирования](Подробное_описание_по_ТЗ.md#Логи)).
 
 Если нужно в базу: Каким-нибудь сервисом администрирования баз данных(в моем случае PgAdmin) подключаемся к localhost:15432, креды в docker-compose.
 #### В ином случае
