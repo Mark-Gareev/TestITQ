@@ -70,7 +70,7 @@ public class DocumentServiceImpl implements DocumentService {
             if (targetStatus == DocumentStatus.APPROVED) {
                 try {
                     registryService.createApproved(author, document.getId());
-                    log.info("approval registry item successfully created for document with id {}",id);
+                    log.info("approval registry item successfully created for document with id {}", id);
                 } catch (Exception e) {
                     //should be other exception to other answer, but in demo app it is no difference
                     //between registry fail and incorrect status move
@@ -94,11 +94,11 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDto getDocument(Long id) {
-        try {
-            Document document = repository.findDocumentById(id);
+        Document document = repository.findDocumentById(id);
+        if (document != null) {
             return documentDtoMapper.toDto(document);
-        } catch (EntityNotFoundException e) {
-            throw new DocumentNotFoundException("Document with id " + id + "not found", e);
+        } else {
+            throw new DocumentNotFoundException("Document with id " + id + "not found");
         }
     }
 

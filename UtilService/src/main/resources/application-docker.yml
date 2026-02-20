@@ -8,8 +8,8 @@ logging:
     console: "[%thread] %-5level %logger{36} [%X{TASK}] - [%X{correlationId}] %msg%n"
 background-task:
   submit:
-    repeat-millis: 10000
-    batch-size: 10
+    repeat-millis: 20
+    batch-size: 100
   approve:
-    repeat-millis: 10000
-    batch-size: 10
+    repeat-millis: 40
+    batch-size: 100
