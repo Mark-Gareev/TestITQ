@@ -1,4 +1,4 @@
-package ru.gareev.utilservice.api.controller;
+package ru.gareev.utilservice.api.controller.advice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,13 @@ public class ExceptionHandlerAdvice {
         ProblemDetail res = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         log.error("Local Network Error", lne);
         res.setDetail(lne.getMessage());
+        return res;
+    }
+    @ExceptionHandler({Exception.class})
+    public ProblemDetail handleException(Exception e){
+        ProblemDetail res = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        log.error("Internal Server error", e);
+        res.setDetail(e.getMessage());
         return res;
     }
 }
