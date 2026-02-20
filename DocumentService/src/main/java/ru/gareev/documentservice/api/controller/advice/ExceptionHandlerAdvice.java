@@ -16,10 +16,9 @@ public class ExceptionHandlerAdvice {
     public ProblemDetail handleDocumentNotFoundException(DocumentNotFoundException dnf) {
         ProblemDetail res = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         log.error("DocumentNotFound", dnf);
-        String detail = HttpStatus.NOT_FOUND.value() +
-                "error id : " +
+        String detail = "error id : " +
                 MDC.get("correlationId") +
-                "error message : " + dnf.getMessage();
+                " error message : " + dnf.getMessage();
         res.setDetail(detail);
         return res;
     }
@@ -28,8 +27,7 @@ public class ExceptionHandlerAdvice {
     public ProblemDetail handleValidationException(MethodArgumentNotValidException mnv) {
         ProblemDetail res = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         log.error("Bad request ", mnv);
-        String detail = HttpStatus.NOT_FOUND.value() +
-                " error id : " +
+        String detail ="error id : " +
                 MDC.get("correlationId");
         res.setDetail(detail);
         return res;
