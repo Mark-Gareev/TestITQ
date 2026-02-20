@@ -58,13 +58,13 @@ public class ConcurrentApproveExecutor {
         executor.shutdown();
         Document document = connectionProvider.getDocument(docId);
         long end = System.currentTimeMillis();
-        log.info("concurrent approve proceed for {}ms",end-start);
+        log.info("concurrent approve proceed for {}ms", end - start);
         return ConcurrentAccessResponse
                 .builder()
                 .successfulAttemptCount(total.getSuccess())
                 .failureAttemptCount(total.getFailure())
                 .notFountAttemptCount(total.getNotFound())
-                .finalStatus(document.getStatus().toString())
+                .finalStatus(document != null ? document.getStatus().toString() : null)
                 .build();
     }
 

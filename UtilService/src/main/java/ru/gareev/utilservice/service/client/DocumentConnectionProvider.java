@@ -7,6 +7,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
@@ -14,15 +15,14 @@ import ru.gareev.utilservice.api.dto.DocumentCreateRequest;
 import ru.gareev.utilservice.api.dto.PageResponse;
 import ru.gareev.utilservice.api.dto.StatusChangeRequest;
 import ru.gareev.utilservice.api.dto.StatusChangeResponseItem;
+import ru.gareev.utilservice.aspect.DocumentServiceConnection;
 import ru.gareev.utilservice.entity.Document;
 import ru.gareev.utilservice.entity.OperationStatus;
 import ru.gareev.utilservice.exceptions.LocalNetworkException;
 import ru.gareev.utilservice.util.Constants;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -33,6 +33,7 @@ public class DocumentConnectionProvider {
         this.client = RestClient.create(baseUrl);
     }
 
+    @DocumentServiceConnection
     public ResponseEntity<Void> create(DocumentCreateRequest request) {
         return client.post()
                 .uri("api/documents/create")
@@ -46,14 +47,17 @@ public class DocumentConnectionProvider {
                 .toEntity(Void.class);
     }
 
+    @DocumentServiceConnection
     public List<Long> getSubmit(long submitCount) {
         return searchByStatus(submitCount, "SUBMITTED");
     }
 
+    @DocumentServiceConnection
     public List<Long> getDraft(long draftCount) {
         return searchByStatus(draftCount, "DRAFT");
     }
 
+    @DocumentServiceConnection
     public List<StatusChangeResponseItem> approve(List<Long> submitted, String author) {
         StatusChangeRequest request = getChangeRequest(submitted, author);
         return client.put()
@@ -66,6 +70,7 @@ public class DocumentConnectionProvider {
 
     }
 
+    @DocumentServiceConnection
     public List<StatusChangeResponseItem> submit(List<Long> drafts, String author) {
         StatusChangeRequest request = getChangeRequest(drafts, author);
         return client.put()
@@ -77,14 +82,29 @@ public class DocumentConnectionProvider {
                 });
     }
 
+    @DocumentServiceConnection
     public Document getDocument(Long docId) {
-        return client.get()
-                .uri("/api/documents/" + docId)
-                .header(Constants.corIdHeader, MDC.get(Constants.corIdKey))
-                .retrieve()
-                .body(Document.class);
+        try {
+            return client.get()
+                    .uri("/api/documents/" + docId)
+                    .header(Constants.corIdHeader, MDC.get(Constants.corIdKey))
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, (req, resp) -> {
+                        if (resp.getStatusCode().equals(HttpStatusCode.valueOf(404))) {
+                            throw new NoSuchElementException();
+                        }
+                    })
+                    .body(Document.class);
+        } catch (NoSuchElementException e) {
+            return null;
+        }
     }
 
+    private boolean is404Err(ClientHttpResponse clientHttpResponse) throws IOException {
+        return clientHttpResponse.getStatusCode().value() == 404;
+    }
+
+    @DocumentServiceConnection
     public OperationStatus statusApprove(Long id, String author) {
         StatusChangeRequest request = getChangeRequest(Collections.singletonList(id), author);
         List<StatusChangeResponseItem> response = client.put()
