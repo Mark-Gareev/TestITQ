@@ -59,30 +59,4 @@ public class DocumentPageServiceImpl implements DocumentPageService {
         log.info("page query proceed for {}ms", end - start);
         return docPage.map(mapper::toListDto);
     }
-    /**
-     * select   d1_0.id,d1_0.created_by,
-     *          d1_0.creation_date_time,
-     *          d1_0.name,d1_0.status,
-     *          d1_0.update_date_time,
-     *          d1_0.version from document d1_0
-     * where    d1_0.status=?
-     *          offset ?
-     *          rows fetch first ?
-     *          rows only
-      select   d1_0.id,
-               d1_0.created_by,
-               d1_0.creation_date_time,
-               d1_0.name,
-               d1_0.status,
-               d1_0.update_date_time,
-               d1_0.version
-      from     document d1_0
-      where    d1_0.status='DRAFT'
-               offset 0
-               rows fetch first 10
-               rows only
-     * 2026-02-20 18:22:08.146.+0300 [http-nio-8080-exec-2] TRACE org.hibernate.orm.jdbc.bind - [171bd6ad-f002-40a0-9f20-4cd262ba1429] binding parameter (1:VARCHAR) <- [DRAFT]
-     * 2026-02-20 18:22:08.146.+0300 [http-nio-8080-exec-2] TRACE org.hibernate.orm.jdbc.bind - [171bd6ad-f002-40a0-9f20-4cd262ba1429] binding parameter (2:INTEGER) <- [0]
-     * 2026-02-20 18:22:08.146.+0300 [http-nio-8080-exec-2] TRACE org.hibernate.orm.jdbc.bind - [171bd6ad-f002-40a0-9f20-4cd262ba1429] binding parameter (3:INTEGER) <- [10]
-     */
 }
