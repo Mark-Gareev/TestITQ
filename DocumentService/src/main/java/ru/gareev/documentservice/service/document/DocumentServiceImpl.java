@@ -70,6 +70,7 @@ public class DocumentServiceImpl implements DocumentService {
             if (targetStatus == DocumentStatus.APPROVED) {
                 try {
                     registryService.createApproved(author, document.getId());
+                    log.info("approval registry item successfully created for document with id {}",id);
                 } catch (Exception e) {
                     //should be other exception to other answer, but in demo app it is no difference
                     //between registry fail and incorrect status move
