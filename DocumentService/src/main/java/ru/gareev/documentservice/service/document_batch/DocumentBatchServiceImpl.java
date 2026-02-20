@@ -36,7 +36,7 @@ public class DocumentBatchServiceImpl implements DocumentBatchService {
 
     private List<StatusMovingResultItem> batchStatusMove(String author, List<Long> ids, DocumentStatus targetStatus) {
         List<StatusMovingResultItem> res = new ArrayList<>(ids.size());
-        log.info("received batch update with size {}", ids.size());
+        log.info("received batch update with size {} target status {}", ids.size(),targetStatus.toString());
         long start = System.currentTimeMillis();
         for (Long id : ids) {
             try {
