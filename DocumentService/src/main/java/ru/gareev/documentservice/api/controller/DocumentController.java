@@ -1,6 +1,8 @@
 package ru.gareev.documentservice.api.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,9 @@ public class DocumentController {
     public DocumentDto getDocumentById(@PathVariable Long id) {
         return documentService.getDocument(id);
     }
+
     @GetMapping("/full/{id}")
-    public FullDocumentDto getFullDocumentById(@PathVariable Long id){
+    public FullDocumentDto getFullDocumentById(@PathVariable Long id) {
         return documentService.getFullDocument(id);
     }
 
@@ -45,8 +48,8 @@ public class DocumentController {
             @RequestParam(required = false) LocalDateTime createdDateFrom,
             @RequestParam(required = false) LocalDateTime createdDateTo,
             @RequestParam(required = false) String status,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @PositiveOrZero @RequestParam(defaultValue = "0") int page,
+            @Positive @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) List<String> sortBy
     ) {
         return documentPageService.getPage(
