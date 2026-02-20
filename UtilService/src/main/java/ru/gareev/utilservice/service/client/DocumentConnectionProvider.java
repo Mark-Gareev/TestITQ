@@ -134,7 +134,7 @@ public class DocumentConnectionProvider {
     private List<Long> searchByStatus(long count, String status) {
         PageResponse response = client.get()
                 .uri(uriBuilder -> {
-                    UriBuilder builder = uriBuilder.path("api/documents/list");
+                    UriBuilder builder = uriBuilder.path("api/documents/search");
                     getSearchMapForStatus(count, status)
                             .forEach(builder::queryParam);
                     return builder.build();

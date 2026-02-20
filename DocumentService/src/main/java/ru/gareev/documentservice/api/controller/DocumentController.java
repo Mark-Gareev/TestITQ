@@ -39,7 +39,7 @@ public class DocumentController {
         return documentService.getDocuments(ids);
     }
 
-    @GetMapping("/list")
+    @GetMapping("/search")
     public Page<DocumentListItemDto> getDocumentList(
             @RequestParam(required = false) String createdBy,
             @RequestParam(required = false) LocalDateTime createdDateFrom,
