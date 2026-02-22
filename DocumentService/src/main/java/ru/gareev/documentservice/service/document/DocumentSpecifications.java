@@ -14,12 +14,12 @@ public class DocumentSpecifications {
 
     public static Specification<Document> createdDateFrom(LocalDateTime from) {
         return (root, query, cb) ->
-                from == null ? null : cb.greaterThanOrEqualTo(root.get("createdDate"), from);
+                from == null ? null : cb.greaterThanOrEqualTo(root.get("creationDateTime"), from);
     }
 
     public static Specification<Document> createdDateTo(LocalDateTime to) {
         return (root, query, cb) ->
-                to == null ? null : cb.lessThanOrEqualTo(root.get("createdDate"), to);
+                to == null ? null : cb.lessThanOrEqualTo(root.get("creationDateTime"), to);
     }
 
     public static Specification<Document> statusEquals(DocumentStatus status) {

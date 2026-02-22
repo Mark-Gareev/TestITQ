@@ -97,7 +97,7 @@ class DocumentControllerTest {
                 status,
                 0,
                 10,
-                Collections.singletonList("id,desc")
+                Collections.singletonList("id_desc")
         );
         Assertions.assertNotNull(res);
         Assertions.assertFalse(res.isEmpty());
@@ -128,7 +128,7 @@ class DocumentControllerTest {
                 null,
                 0,
                 10,
-                Collections.singletonList("id,desc"));
+                Collections.singletonList("id_desc"));
         //find by name2
         Page<DocumentListItemDto> n2 = controller.getDocumentList(
                 name2,
@@ -137,7 +137,7 @@ class DocumentControllerTest {
                 null,
                 0,
                 10,
-                Collections.singletonList("id,desc"));
+                Collections.singletonList("id_desc"));
         Assertions.assertEquals(n2.getTotalElements(), n1.getTotalElements());
         Assertions.assertEquals(n2.getTotalElements(), count / 2);
         for (DocumentListItemDto dto : n1) {

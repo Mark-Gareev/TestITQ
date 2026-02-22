@@ -46,7 +46,7 @@ public class DocumentPageServiceImpl implements DocumentPageService {
         Sort sorting = Sort.unsorted();
         if (sortBy != null && !sortBy.isEmpty()) {
             for (String sortParam : sortBy) {
-                String[] parts = sortParam.split(",");
+                String[] parts = sortParam.split("_");
                 String field = parts[0];
                 Sort.Direction direction = parts.length > 1 && parts[1].equalsIgnoreCase("desc")
                         ? Sort.Direction.DESC : Sort.Direction.ASC;
